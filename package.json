@@ -5,11 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test:unit": "vue-cli-service test:unit src/**/*.spec.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "firebase": "^8.2.7",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "sinon": "^9.2.4",
     "vue-template-compiler": "^2.6.11"
   }
 }
