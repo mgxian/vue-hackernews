@@ -13,7 +13,7 @@ describe('ItemList.vue', () => {
       start: () => {},
       finish: () => {}
     }
-    sinon.stub(api, 'fetchListData').resolves(items)
+    const fetchListData = sinon.stub(api, 'fetchListData').resolves(items)
     const wrapper = shallowMount(ItemList, { mocks: { $bar } })
     await flushPromises()
     const Items = wrapper.findAllComponents(Item)
@@ -21,6 +21,7 @@ describe('ItemList.vue', () => {
     Items.wrappers.forEach((wrapper, i) => {
       expect(wrapper.vm.item).to.equal(items[i])
     })
+    fetchListData.restore()
   })
 
   it('calls $bar start on load', () => {
@@ -30,5 +31,32 @@ describe('ItemList.vue', () => {
     }
     shallowMount(ItemList, { mocks: { $bar } })
     expect($bar.start.called).to.equal(true)
+  })
+
+  it('calls $bar finish when load is successful', async () => {
+    const $bar = {
+      start: () => {},
+      finish: sinon.spy()
+    }
+    const fetchListData = sinon.stub(api, 'fetchListData').resolves([])
+    shallowMount(ItemList, { mocks: { $bar } })
+    await flushPromises()
+    expect($bar.finish.called).to.equal(true)
+    fetchListData.restore()
+  })
+
+  it('calls $bar fail when load is failed', async () => {
+    const $bar = {
+      start: () => {},
+      finish: sinon.spy(),
+      fail: sinon.spy()
+    }
+
+    const fetchListData = sinon.stub(api, 'fetchListData').rejects()
+    shallowMount(ItemList, { mocks: { $bar } })
+    await flushPromises()
+    expect($bar.fail.called).to.equal(true)
+    expect($bar.finish.called).to.equal(false)
+    fetchListData.restore()
   })
 })
